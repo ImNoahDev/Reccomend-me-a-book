@@ -1,30 +1,28 @@
 import React, { useState } from 'react';
 import BookForm from './components/BookForm';
 import { getSuggestedBook } from './services/ollamaService';
+import BookRecommendation from './components/BookRecommendation';
 
 const App = () => {
   const [suggestedBook, setSuggestedBook] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const suggestBook = async (book1, book2, book3) => {
+  const suggestBook = async (books) => {
     setLoading(true);
-    const suggestion = await getSuggestedBook(book1, book2, book3);
+    const suggestion = await getSuggestedBook(books);
     setSuggestedBook(suggestion);
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="min-h-screen flex flex-col items-center justify-center ">
+      <div className="max-w-4xl w-full p-6 bg-white rounded-lg shadow-lg text-center items-center">
         <h1 className="text-2xl font-bold mb-4">Book Suggestion App</h1>
-        <BookForm onSuggest={suggestBook} />
+        <div className="mb-6">
+          <BookForm onSuggest={suggestBook} />
+        </div>
         {loading && <p>Loading...</p>}
-        {suggestedBook && (
-          <div className="mt-4 p-4 bg-indigo-100 rounded-md">
-            <h2 className="text-lg font-semibold">Suggested Book:</h2>
-            <p>{suggestedBook}</p>
-          </div>
-        )}
+        {suggestedBook && <BookRecommendation suggestion={suggestedBook} />}
       </div>
     </div>
   );
